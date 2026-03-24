@@ -1,0 +1,17 @@
+@global(_start)
+@section(.text)
+
+label _start
+    print(msg, 23)
+
+func print
+    rsi = [rbp+24]
+    rdx = [rbp+16]
+    rdi = 1
+    syscall(1)
+end.
+
+@section(.data)
+
+byte a = 0
+char msg = "Hello, Linux!",10
