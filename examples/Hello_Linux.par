@@ -3,6 +3,7 @@
 
 label _start
     print(msg, 23)
+    syscall(60)
 
 func print
     rsi = [rbp+24]
