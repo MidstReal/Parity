@@ -14,5 +14,4 @@ end.
 
 @section(.data)
 
-byte a = 0
 char msg = "Hello, Linux!",10
