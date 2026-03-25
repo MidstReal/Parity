@@ -39,6 +39,8 @@ void chkcom(){
     if (first == string::npos) return;
     line = line.substr(first);
 
+    //outtext("\n;--------------------" + line + "--------------------");
+
     vector<string> command;
     vector<string> arg;
     int ccom = 0;
@@ -67,7 +69,7 @@ void chkcom(){
             if (carg >= arg.size()) arg.push_back("");
             if (line[i] == ',') {
                 if (!arg[carg].empty()) carg++;
-            } else if (line[i] != ' ' && line[i] != '\t') {
+            } else {
                 arg[carg] += line[i];
             }
         } else {
@@ -144,11 +146,36 @@ void chkcom(){
                 lab_ctr++;
             }
         }
+        else if(command[0] == "while" && arg.size() >= 3){
+            type(arg);
+            string start_lbl = ".LBL_START_" + to_string(lab_ctr);
+            string end_lbl = ".LBL_END_" + to_string(lab_ctr);
+            
+            outtext(start_lbl + ":");
+            outtext("cmp " + arg[0] + ", " + arg[2]);
+            
+            if(arg[1] == "==")      outtext("jne " + end_lbl);
+            else if(arg[1] == "!=") outtext("je " + end_lbl);
+            else if(arg[1] == "<")  outtext("jge " + end_lbl);
+            else if(arg[1] == "<=") outtext("jg " + end_lbl);
+            else if(arg[1] == ">")  outtext("jle " + end_lbl);
+            else if(arg[1] == ">=") outtext("jl " + end_lbl);
+
+            label_history.push_back(-(lab_ctr + 1)); 
+            lab_ctr++;
+        }
         else if(command[0] == "end."){
             if(!label_history.empty()){
-                int last_label = label_history.back();
+                long int last_id = label_history.back();
                 label_history.pop_back();
-                outtext(".LBL_" + to_string(last_label) + ":");
+
+                if (last_id < 0) {
+                    long int actual_id = (-last_id) - 1;
+                    outtext("jmp .LBL_START_" + to_string(actual_id));
+                    outtext(".LBL_END_" + to_string(actual_id) + ":");
+                } else {
+                    outtext(".LBL_" + to_string(last_id) + ":");
+                }
             }
             else if(isfunc){
                 if(mode64) {outtext("pop rbp");}
