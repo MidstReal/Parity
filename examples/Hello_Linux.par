@@ -6,8 +6,8 @@ label _start
     syscall(60)
 
 func print
-    rsi = [rbp+24]
-    rdx = [rbp+16]
+    rsi = $arg_0
+    rdx = $arg_1
     rdi = 1
     syscall(1)
 end.
