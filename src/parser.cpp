@@ -23,6 +23,16 @@ void type(vector<string>& command){
         }
     }
 }
+void farg(vector<string>& arg){
+    for(int i = 0; i < arg.size(); i++){
+        if(arg[i].length() >= 5 && arg[i].substr(0, 5) == "$arg_"){
+            int argNum = stoi(arg[i].substr(5)); 
+            if(mode64) arg[i] = "[rbp+" + to_string(argNum * 8 + 16) + "]";
+            else if(mode32) arg[i] = "[ebp+" + to_string(argNum * 4 + 8) + "]";
+            else if(mode16) arg[i] = "[bp+" + to_string(argNum * 2 + 4) + "]";
+        }
+    }
+}
 
 void chkcom(){    
     size_t first = line.find_first_not_of(" \t\r\n");
@@ -77,6 +87,7 @@ void chkcom(){
     int aftpos = line.find('=');
     if(command.size() >= 1){
         type(command);
+        farg(command);
         
         if(command[0] == "#mode64"){
             mode64 = true; mode32 = false; mode16 = false;
@@ -186,7 +197,11 @@ void chkcom(){
 
         if(cmf){
             type(arg);
-            for(int i = 0; i < arg.size(); i++) if(!arg[i].empty()) outtext("push " + arg[i]);
+            for (int i = arg.size() - 1; i >= 0; i--) {
+                if (!arg[i].empty()) {
+                    outtext("push " + arg[i]);
+                }
+            }
             outtext("call " + command[0]);
             if(!arg.empty()){
                 int wordSize = mode64 ? 8 : (mode32 ? 4 : 2);
