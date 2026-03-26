@@ -1,0 +1,24 @@
+@global(_start)
+@section(.text)
+
+label _start
+    if(b:[a], ==, 10)
+        print(msg, 7)
+    end.
+    if(b:[a], !=, 10)
+        print(msg2, 8)
+    end.
+
+    syscall(60)
+
+func print
+    rsi = $arg_0
+    rdx = $arg_1
+    rdi = 1
+    syscall(1)
+end.
+
+@section(.data)
+byte a = 11
+char msg = "a = 10",10
+char msg2 = "a != 10",10
