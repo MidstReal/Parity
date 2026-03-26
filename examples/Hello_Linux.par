@@ -2,7 +2,7 @@
 @section(.text)
 
 label _start
-    print(msg, 23)
+    print(msg, 14)
     syscall(60)
 
 func print
