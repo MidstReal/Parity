@@ -1,0 +1,21 @@
+@global(_start)
+@section(.text)
+
+label _start
+    while(b:[i], <, 10)
+        print(msg, 6)
+        @inc(byte [i])
+    end.
+
+    syscall(60)
+
+func print
+    rsi = $arg_0
+    rdx = $arg_1
+    rdi = 1
+    syscall(1)
+end.
+
+@section(.data)
+byte i = 0
+char msg = "hello",10
