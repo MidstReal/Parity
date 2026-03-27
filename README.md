@@ -1,5 +1,6 @@
+# Doesn't update
 # Parity
-The Parity programming language
+Parity programming language
 # Compile
 compiler:
 ```
